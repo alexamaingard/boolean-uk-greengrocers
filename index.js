@@ -60,7 +60,7 @@ const groceriesList = [
     type: 'vegetable'
   }
 ]
-
+// TOOL FUNCTIONS
 function createElement(tag){
   const element = document.createElement(tag);
   return element;
@@ -91,6 +91,11 @@ function createImageElement(item, className = ''){
   return itemImg;
 }
 
+function insertAfter(newNode, existingNode) {
+  existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
+}
+
+//MAIN FUNCTIONS/CODE
 const groceriesListContainer = document.querySelector('.store--item-list');
 const cartListContainer = document.querySelector('.cart--item-list');
 const totalContainer = document.querySelector('.total-number');
@@ -214,13 +219,46 @@ function createQuantityKeys(){
   })
 }
 
-function initialize(){
+function initializeStore(type){
+  groceriesListContainer.innerText = '';
   groceriesList.forEach(item => {
-    addStoreItem(item);
+    if(type === 'all'){
+      addStoreItem(item);
+    }
+    else if(item.type === type){
+        addStoreItem(item);
+    }
   });
   createQuantityKeys();
 }
 
+function initializeForm(){
+  const typesForm = createElementWithClass('form', 'center');
+  const selectTypes = createElement('select');
+  selectTypes.setAttribute('name', 'types');
+  selectTypes.setAttribute('id', 'types');
+  const selectFromOption = createElementWithText('option', 'Filter');
+  selectFromOption.value = 'select';
+  const fruitOption = createElementWithText('option', 'Fruits');
+  fruitOption.value = 'fruit';
+  const vegOption = createElementWithText('option', 'Vegetables');
+  vegOption.value = 'vegetable';
+  const allTypes = createElementWithText('option', 'All');
+  allTypes.value = 'all';
+  selectTypes.append(selectFromOption, fruitOption, vegOption, allTypes);
+  typesForm.append(selectTypes);
+  insertAfter(typesForm, document.querySelector('h1'));
+  typesForm.addEventListener('change', function(event){
+    let selectedFilter = event.target.value;
+    if(!selectedFilter){
+      console.log('hi');
+      return;
+    }
+    console.log(selectedFilter);
+    initializeStore(selectedFilter);
+  });
+}
+
 let myCart = [];
-initialize();
+initializeForm();
 listenForAddToCartButtons();
