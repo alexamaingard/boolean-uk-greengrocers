@@ -60,6 +60,7 @@ const groceriesList = [
     type: 'vegetable'
   }
 ]
+
 // TOOL FUNCTIONS
 function createElement(tag){
   const element = document.createElement(tag);
@@ -232,7 +233,7 @@ function initializeStore(type){
   createQuantityKeys();
 }
 
-function initializeForm(){
+function createFiltersForm(){
   const typesForm = createElementWithClass('form', 'center');
   const selectTypes = createElement('select');
   selectTypes.setAttribute('name', 'types');
@@ -248,13 +249,13 @@ function initializeForm(){
   selectTypes.append(selectFromOption, fruitOption, vegOption, allTypes);
   typesForm.append(selectTypes);
   insertAfter(typesForm, document.querySelector('h1'));
-  typesForm.addEventListener('change', function(event){
-    let selectedFilter = event.target.value;
-    if(!selectedFilter){
-      console.log('hi');
-      return;
-    }
-    console.log(selectedFilter);
+  return typesForm;
+}
+
+function initializeForm(){
+  const filtersForm = createFiltersForm();
+  filtersForm.addEventListener('change', function(event){
+    const selectedFilter = event.target.value;
     initializeStore(selectedFilter);
   });
 }
